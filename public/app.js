@@ -1,4 +1,4 @@
-const questionnaireVersion = "2026-10-07.v1";
+const questionnaireVersion = "2026-10-07.v2";
 
 const questions = [
   {
@@ -15,14 +15,37 @@ const questions = [
   },
   {
     id: "sportDiscipline",
-    title: "Em qual modalidade você atua com mais frequência?",
-    helper: "Mantemos Remo e Va'a separados para entender necessidades diferentes.",
+    title: "Com qual modalidade você tem mais contato?",
+    helper: "Escolha a modalidade que mais faz parte da sua rotina.",
     options: [
-      ["rowing", "Remo na água"],
+      ["rowing", "Remo"],
       ["vaa", "Va'a / canoa havaiana"],
-      ["indoor_rowing", "Remo indoor / ergômetro"],
-      ["multiple", "Atuo em mais de uma modalidade"],
+      ["rowing_and_vaa", "Remo e Va'a"],
       ["other", "Outra modalidade"]
+    ]
+  },
+  {
+    id: "rowingDiscipline",
+    title: "No Remo, qual tipo de palamenta faz mais parte da sua rotina?",
+    helper: "Palamenta dupla é o sculling; palamenta simples é o sweep.",
+    when: answers => ["rowing", "rowing_and_vaa"].includes(answers.sportDiscipline),
+    options: [
+      ["sculling", "Palamenta dupla"],
+      ["sweep", "Palamenta simples"],
+      ["sculling_and_sweep", "As duas"],
+      ["not_sure", "Não tenho certeza"]
+    ]
+  },
+  {
+    id: "vaaTrainingContext",
+    title: "No Va'a, você treina principalmente em qual contexto?",
+    helper: "As classes informadas pelos praticantes serão preservadas sem converter V, OC e W entre si.",
+    when: answers => ["vaa", "rowing_and_vaa"].includes(answers.sportDiscipline),
+    options: [
+      ["one_paddler", "Embarcação para um remador"],
+      ["crew_craft", "Embarcação de equipe"],
+      ["both", "Nos dois contextos"],
+      ["not_sure", "Não tenho certeza"]
     ]
   },
   {
@@ -36,50 +59,195 @@ const questions = [
     ]
   },
   {
-    id: "weeklyFrequency",
-    title: "Em uma semana comum, quantas sessões você acompanha ou realiza?",
+    id: "weeklyTrainingFrequency",
+    title: answers => answers.participantRole === "coach"
+      ? "Em uma semana comum, quantos treinos você orienta?"
+      : "Em uma semana comum, quantas vezes você treina?",
+    when: answers => ["athlete", "coach"].includes(answers.participantRole),
     options: [
-      ["1_or_less", "1 ou menos"],
-      ["2_to_3", "2 a 3"],
-      ["4_to_5", "4 a 5"],
-      ["6_or_more", "6 ou mais"]
+      ["1_or_less", "1 vez ou menos"],
+      ["2_to_3", "2 a 3 vezes"],
+      ["4_to_5", "4 a 5 vezes"],
+      ["6_or_more", "6 vezes ou mais"]
     ]
   },
   {
-    id: "currentTracking",
-    title: "Como você acompanha a evolução dos treinos hoje?",
-    helper: "Escolha o método principal.",
+    id: "participationContext",
+    title: "O que melhor descreve sua participação hoje?",
     options: [
-      ["memory_notes", "Memória, conversa ou anotações"],
-      ["watch_app", "Relógio ou aplicativo esportivo"],
-      ["boat_instrument", "Instrumento no barco"],
-      ["ergometer", "Dados do ergômetro"],
-      ["spreadsheet_platform", "Planilha ou plataforma de treino"],
-      ["not_tracking", "Não acompanho de forma estruturada"]
+      ["recreation", "Lazer e prática recreativa"],
+      ["health_fitness", "Saúde e condicionamento"],
+      ["amateur_competition", "Competição amadora"],
+      ["high_performance", "Alto rendimento"],
+      ["professional_role", "Atuação profissional no esporte"]
     ]
   },
   {
-    id: "primaryChallenge",
-    title: "Qual é a maior dificuldade depois de uma sessão?",
+    id: "workoutRecordingFrequency",
+    title: answers => {
+      if (answers.participantRole === "coach") return "Nos treinos que você orienta, com que frequência algum dado é registrado?";
+      if (["club_leader", "equipment_manager"].includes(answers.participantRole)) return "Nos treinos do clube ou da equipe, com que frequência algum dado é registrado?";
+      return "Durante ou depois dos seus treinos, com que frequência você registra algum dado?";
+    },
+    helper: "Pode ser um registro automático, manual ou feito por outra pessoa.",
     options: [
-      ["understand_performance", "Entender o que realmente aconteceu"],
-      ["compare_sessions", "Comparar sessões e perceber evolução"],
-      ["connect_context", "Relacionar dados, contexto e condições"],
-      ["share_feedback", "Compartilhar feedback com atleta ou equipe"],
-      ["trust_data", "Confiar na qualidade dos dados"],
-      ["no_major_challenge", "Não tenho uma dificuldade relevante"]
+      ["every_workout", "Em todo treino"],
+      ["most_workouts", "Na maioria dos treinos"],
+      ["some_workouts", "Somente em alguns treinos"],
+      ["rarely", "Raramente"],
+      ["never", "Nunca"]
+    ]
+  },
+  {
+    id: "noWorkoutRecordingReason",
+    title: "Qual é o principal motivo para não registrar os treinos?",
+    when: answers => answers.workoutRecordingFrequency === "never",
+    options: [
+      ["no_need", "Não sinto necessidade"],
+      ["no_equipment", "Não tenho equipamento adequado"],
+      ["too_complex", "É complicado ou dá trabalho"],
+      ["too_expensive", "As opções são caras"],
+      ["dont_know_how", "Não sei bem como fazer"],
+      ["other", "Outro motivo"]
+    ]
+  },
+  {
+    id: "workoutRecordingTools",
+    title: "O que é usado para registrar os treinos?",
+    helper: "Você pode marcar mais de uma opção.",
+    multiple: true,
+    when: answers => answers.workoutRecordingFrequency && answers.workoutRecordingFrequency !== "never",
+    options: [
+      ["speedcoach", "SpeedCoach"],
+      ["mobile_phone", "Celular"],
+      ["sports_watch", "Relógio esportivo"],
+      ["rowerg_pm5", "RowErg com PM5"],
+      ["other_dedicated_instrument", "Outro instrumento dedicado"],
+      ["training_platform", "Aplicativo, planilha ou plataforma"],
+      ["manual_notes", "Anotações manuais"],
+      ["other", "Outro recurso"]
+    ]
+  },
+  {
+    id: "recordedWorkoutInformation",
+    title: "Quais informações você costuma registrar ou consultar?",
+    helper: "Marque todas as que fazem parte da sua rotina.",
+    multiple: true,
+    when: answers => answers.workoutRecordingFrequency && answers.workoutRecordingFrequency !== "never",
+    options: [
+      ["elapsed_time", "Tempo"],
+      ["distance", "Distância"],
+      ["pace", "Parcial (tempo/500 m)"],
+      ["stroke_rate", "Voga / cadência de remada"],
+      ["heart_rate", "Frequência cardíaca"],
+      ["route", "Percurso"],
+      ["power", "Potência"],
+      ["workout_notes", "Anotações sobre o treino"]
+    ]
+  },
+  {
+    id: "workoutReviewMoment",
+    title: "Quando você costuma olhar para essas informações?",
+    when: answers => answers.workoutRecordingFrequency && answers.workoutRecordingFrequency !== "never",
+    options: [
+      ["during_workout", "Durante o treino"],
+      ["immediately_after", "Logo depois do treino"],
+      ["same_day", "Mais tarde, no mesmo dia"],
+      ["before_next_workout", "Antes do próximo treino"],
+      ["rarely_review", "Registro, mas raramente volto a consultar"]
+    ]
+  },
+  {
+    id: "workoutDataUse",
+    title: "O que você normalmente faz com essas informações?",
+    helper: "Marque as opções que realmente fazem parte da sua rotina.",
+    multiple: true,
+    when: answers => answers.workoutRecordingFrequency && answers.workoutRecordingFrequency !== "never",
+    options: [
+      ["review_own_workout", "Reviso o meu próprio treino"],
+      ["compare_workouts", "Comparo com outros treinos"],
+      ["share_with_coach", "Compartilho com o treinador"],
+      ["share_with_athlete_or_crew", "Compartilho com atleta, equipe ou guarnição"],
+      ["plan_next_workout", "Uso para planejar o próximo treino"],
+      ["archive_only", "Apenas guardo o registro"],
+      ["rarely_use", "Raramente faço algo com os dados"]
+    ]
+  },
+  {
+    id: "workoutTrackingNeed",
+    title: "Qual é a principal razão para você querer acompanhar um treino?",
+    options: [
+      ["track_progress", "Perceber evolução ao longo do tempo"],
+      ["execute_training_plan", "Saber se o treino planejado foi realizado"],
+      ["compare_workouts", "Comparar treinos"],
+      ["review_technique", "Apoiar a revisão da técnica"],
+      ["review_crew", "Entender o desempenho da equipe ou guarnição"],
+      ["prepare_competition", "Preparar-se para testes ou competições"],
+      ["support_coaching", "Dar suporte ao trabalho do treinador"],
+      ["no_clear_need", "Não sinto uma necessidade clara"]
+    ]
+  },
+  {
+    id: "currentTrackingGap",
+    title: "O que mais falta na forma como você acompanha os treinos hoje?",
+    options: [
+      ["easier_recording", "Registrar com menos esforço"],
+      ["unified_information", "Reunir as informações em um só lugar"],
+      ["trustworthy_data", "Confiar mais nos dados"],
+      ["clear_interpretation", "Entender melhor o que os dados significam"],
+      ["workout_comparison", "Comparar treinos com facilidade"],
+      ["technique_context", "Relacionar dados e técnica"],
+      ["sharing", "Compartilhar com facilidade"],
+      ["nothing_missing", "Nada importante"]
     ]
   },
   {
     id: "mostUsefulOutcome",
     title: "Qual resultado do Remus seria mais útil para você?",
     options: [
-      ["clear_session_summary", "Resumo claro de cada sessão"],
+      ["clear_workout_summary", "Resumo claro de cada treino"],
       ["progress_over_time", "Evolução ao longo do tempo"],
-      ["technique_review", "Revisão de técnica com evidências"],
+      ["technique_review", "Revisão da técnica apoiada por dados"],
       ["training_plan_comparison", "Comparação entre treino planejado e realizado"],
-      ["crew_equipment_context", "Contexto de guarnição e equipamento"],
-      ["research_quality_data", "Dados confiáveis para pesquisa"]
+      ["crew_review", "Revisão da equipe ou guarnição"],
+      ["conditions_equipment_context", "Relação com condições e equipamento"],
+      ["research_evidence", "Evidências rastreáveis para pesquisa"]
+    ]
+  },
+  {
+    id: "desiredTiming",
+    title: "Quando essa informação teria mais valor para você?",
+    options: [
+      ["during_workout", "Durante o treino"],
+      ["immediately_after", "Logo depois do treino"],
+      ["same_day", "Mais tarde, no mesmo dia"],
+      ["before_next_workout", "Antes do próximo treino"],
+      ["periodic_review", "Em uma revisão periódica"]
+    ]
+  },
+  {
+    id: "primaryBarrier",
+    title: "O que mais poderia impedir você de usar o Remus?",
+    options: [
+      ["complex_setup", "Instalação ou preparação complicada"],
+      ["hard_to_understand", "Resultados difíceis de entender"],
+      ["lack_of_trust", "Falta de confiança nos resultados"],
+      ["battery", "Autonomia insuficiente"],
+      ["water_resistance", "Resistência inadequada à água"],
+      ["compatibility", "Incompatibilidade com meu equipamento"],
+      ["price", "Preço"]
+    ]
+  },
+  {
+    id: "likelyBuyer",
+    title: "Quem provavelmente decidiria pela compra de uma solução como o Remus?",
+    options: [
+      ["athlete", "O próprio atleta"],
+      ["coach", "Treinador(a)"],
+      ["club", "Clube ou equipe"],
+      ["equipment_manager", "Responsável pelos equipamentos"],
+      ["sponsor", "Patrocinador"],
+      ["unknown", "Ainda não sei"]
     ]
   },
   {
@@ -95,8 +263,8 @@ const questions = [
   },
   {
     id: "monthlyPrice",
-    title: "Qual faixa mensal pareceria razoável para começar?",
-    helper: "Considere uma solução que entregue o resultado escolhido anteriormente.",
+    title: "Se houvesse uma mensalidade, qual faixa pareceria razoável?",
+    helper: "Considere uma solução que entregue o resultado escolhido por você.",
     options: [
       ["free_only", "Usaria somente uma versão gratuita"],
       ["brl_20_to_49", "R$ 20 a R$ 49"],
@@ -135,10 +303,10 @@ function setScreen(content) {
 function intro() {
   progressRegion.hidden = true;
   setScreen(`
-    <p class="eyebrow">Pesquisa inicial · 4 minutos</p>
+    <p class="eyebrow">Pesquisa inicial · 7 a 10 minutos</p>
     <h1>Ajude a construir o próximo Remus.</h1>
     <p class="lead">Queremos entender como atletas, treinadores e clubes acompanham treinos hoje — e quais problemas realmente merecem uma solução.</p>
-    <div class="meta-row"><span>10 perguntas</span><span>Respostas objetivas</span><span>Sem cadastro</span></div>
+    <div class="meta-row"><span>Percurso personalizado</span><span>Respostas objetivas</span><span>Sem cadastro</span></div>
     <div class="actions"><button class="primary" type="button" data-action="start">Começar</button></div>
   `);
 }
@@ -156,10 +324,9 @@ function consent() {
 }
 
 function updateProgress() {
-  const current = state.index + 1;
-  const percent = Math.round((current / questions.length) * 100);
+  const percent = Math.round(((state.index + 1) / questions.length) * 100);
   progressRegion.hidden = false;
-  progressLabel.textContent = `Pergunta ${current} de ${questions.length}`;
+  progressLabel.textContent = "Progresso da pesquisa";
   progressPercent.textContent = `${percent}%`;
   progressBar.style.width = `${percent}%`;
   progressTrack.setAttribute("aria-valuenow", String(percent));
@@ -168,8 +335,10 @@ function updateProgress() {
 function question() {
   updateProgress();
   const item = questions[state.index];
+  const title = typeof item.title === "function" ? item.title(state.answers) : item.title;
+  const selectedValues = item.multiple ? (state.answers[item.id] || []) : [];
   const options = item.options.map(([value, label], index) => `
-    <button class="option" type="button" style="--order:${index}" data-value="${value}" aria-pressed="false">
+    <button class="option${selectedValues.includes(value) ? " selected" : ""}" type="button" style="--order:${index}" data-value="${value}" aria-pressed="${selectedValues.includes(value)}">
       <span class="option-key">${index + 1}</span>
       <span class="option-label">${label}</span>
       <span class="option-check" aria-hidden="true">✓</span>
@@ -177,10 +346,22 @@ function question() {
   `).join("");
   setScreen(`
     <p class="eyebrow">Conte para a gente</p>
-    <h2 id="question-title">${item.title}</h2>
+    <h2 id="question-title">${title}</h2>
     <div class="options" role="group" aria-labelledby="question-title">${options}</div>
     ${item.helper ? `<p class="helper">${item.helper}</p>` : ""}
+    ${item.multiple ? `<div class="actions"><button class="primary" type="button" data-action="continue"${selectedValues.length ? "" : " disabled"}>Continuar</button></div>` : ""}
   `);
+}
+
+function advanceToNextQuestion() {
+  state.index += 1;
+  while (state.index < questions.length) {
+    const candidate = questions[state.index];
+    if (!candidate.when || candidate.when(state.answers)) break;
+    state.index += 1;
+  }
+  if (state.index < questions.length) question();
+  else submit();
 }
 
 async function transition(next) {
@@ -196,15 +377,25 @@ async function transition(next) {
 async function choose(button) {
   if (state.busy) return;
   const item = questions[state.index];
+  if (item.multiple) {
+    const selected = new Set(state.answers[item.id] || []);
+    if (selected.has(button.dataset.value)) selected.delete(button.dataset.value);
+    else selected.add(button.dataset.value);
+    state.answers[item.id] = [...selected];
+    button.classList.toggle("selected", selected.has(button.dataset.value));
+    button.setAttribute("aria-pressed", String(selected.has(button.dataset.value)));
+    const continueButton = screen.querySelector("[data-action='continue']");
+    continueButton.disabled = selected.size === 0;
+    status.textContent = selected.size === 1 ? "1 opção selecionada" : `${selected.size} opções selecionadas`;
+    return;
+  }
   state.answers[item.id] = button.dataset.value;
   button.classList.add("selected");
   button.setAttribute("aria-pressed", "true");
   status.textContent = `Resposta selecionada: ${button.querySelector(".option-label").textContent}`;
   await new Promise(resolve => setTimeout(resolve, matchMedia("(prefers-reduced-motion: reduce)").matches ? 5 : 380));
   transition(() => {
-    state.index += 1;
-    if (state.index < questions.length) question();
-    else submit();
+    advanceToNextQuestion();
   });
 }
 
@@ -258,6 +449,7 @@ screen.addEventListener("click", event => {
   } else if (button.dataset.action === "decline") {
     transition(() => setScreen(`<p class="eyebrow">Tudo bem</p><h2>Obrigado pelo seu tempo.</h2><p class="lead">Nenhuma resposta foi enviada.</p>`));
   } else if (button.dataset.action === "retry") submit();
+  else if (button.dataset.action === "continue") transition(advanceToNextQuestion);
   else if (button.classList.contains("option")) choose(button);
 });
 

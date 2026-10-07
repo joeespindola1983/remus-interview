@@ -33,6 +33,7 @@ body {
 button, input { font: inherit; }
 
 button { -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor: not-allowed; opacity: 0.48; }
 
 .skip-link {
   position: fixed;

@@ -1,6 +1,6 @@
 # REMUS QUESTIONNAIRE
 
-Questionário temporário de pesquisa de mercado para o OKR KAN-41: validar necessidades, disposição de pagamento e interesse em piloto com 15–20 potenciais usuários do Remus.
+Questionário temporário de pesquisa de mercado para o OKR KAN-41: validar necessidades, disposição de pagamento e interesse em piloto com 15–20 potenciais usuários do Remus. O vocabulário e os limites dos campos estão documentados em [`docs/QUESTIONNAIRE_DATA_DICTIONARY.md`](docs/QUESTIONNAIRE_DATA_DICTIONARY.md).
 
 ## Executar localmente
 

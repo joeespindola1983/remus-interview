@@ -31,13 +31,13 @@ test("health and response submission", async t => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      questionnaireVersion: "2026-10-07.v1",
+      questionnaireVersion: "2026-10-07.v2",
       consent: true,
-      answers: Object.fromEntries(Array.from({ length: 10 }, (_, index) => [`q${index}`, "answer"]))
+      answers: Object.fromEntries(Array.from({ length: 20 }, (_, index) => [`q${index}`, "answer"]))
     })
   });
   assert.equal(submission.status, 201);
   const saved = JSON.parse((await readFile(responsesFile, "utf8")).trim());
   assert.equal(saved.consent, true);
-  assert.equal(Object.keys(saved.answers).length, 10);
+  assert.equal(Object.keys(saved.answers).length, 20);
 });

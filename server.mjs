@@ -60,11 +60,11 @@ async function readJsonBody(request) {
 
 function isValidSubmission(value) {
   return value
-    && value.questionnaireVersion === "2026-10-07.v1"
+    && value.questionnaireVersion === "2026-10-07.v2"
     && value.consent === true
     && value.answers
     && typeof value.answers === "object"
-    && Object.keys(value.answers).length >= 8;
+    && Object.keys(value.answers).length >= 16;
 }
 
 function hasAdminAccess(request) {
