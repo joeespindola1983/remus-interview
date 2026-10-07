@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: remus-interview
+    runtime: node
+    plan: starter
+    buildCommand: echo "No build required"
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: RESPONSES_FILE
+        value: /var/data/responses.ndjson
+    disk:
+      name: remus-questionnaire-data
+      mountPath: /var/data
+      sizeGB: 1
