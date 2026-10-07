@@ -79,12 +79,20 @@ async function serveFile(request, response) {
   const url = new URL(request.url, "http://localhost");
   const requested = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
   const safePath = normalize(requested).replace(/^(\.\.(\/|\\|$))+/, "");
-  const filePath = join(root, safePath);
+  let filePath = join(root, safePath);
   if (!filePath.startsWith(root) || !existsSync(filePath)) {
     json(response, 404, { error: "not_found" });
     return;
   }
-  const details = await stat(filePath);
+  let details = await stat(filePath);
+  if (details.isDirectory()) {
+    filePath = join(filePath, "index.html");
+    if (!existsSync(filePath)) {
+      json(response, 404, { error: "not_found" });
+      return;
+    }
+    details = await stat(filePath);
+  }
   if (!details.isFile()) {
     json(response, 404, { error: "not_found" });
     return;

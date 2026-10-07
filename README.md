@@ -40,6 +40,18 @@ https://remus-interview.onrender.com/?name=Ana%20Silva
 
 O nome só é armazenado se a pessoa escolher enviar a resposta identificada. Nunca coloque e-mail no link: parâmetros de URL podem aparecer no histórico do navegador e em logs de acesso.
 
+## Área de respostas
+
+Acesse `https://remus-interview.onrender.com/responses/` e informe o `QUESTIONNAIRE_ADMIN_TOKEN`. A página apresenta totais, filtros, respostas individuais e exportação JSON/CSV.
+
+Para um link administrativo temporário, use o token no fragmento, não na query string:
+
+```text
+https://remus-interview.onrender.com/responses/#token=SEU_TOKEN
+```
+
+O fragmento não é enviado ao servidor e é removido da barra de endereço assim que a página o lê. O token fica somente no `sessionStorage` da aba até “Sair” ou o fechamento da sessão.
+
 ## Decisões do MVP
 
 - Interface em português do Brasil, responsiva e centrada.

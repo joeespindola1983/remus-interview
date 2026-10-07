@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Respostas · REMUS QUESTIONNAIRE</title>
+    <link rel="stylesheet" href="/admin.css" />
+    <script src="/admin.js" type="module"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Remus Questionnaire">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span><strong>REMUS</strong><small>QUESTIONNAIRE</small></span>
+      </a>
+      <span class="admin-badge">Pesquisa</span>
+    </header>
+
+    <main>
+      <section id="login" class="login-card">
+        <p class="eyebrow">Área administrativa</p>
+        <h1>Respostas da pesquisa</h1>
+        <p>Informe o token administrativo configurado no backend.</p>
+        <form id="login-form">
+          <label for="token">Token</label>
+          <input id="token" type="password" autocomplete="current-password" required />
+          <button type="submit">Abrir respostas</button>
+        </form>
+        <p id="login-error" class="error" role="alert" hidden></p>
+      </section>
+
+      <section id="dashboard" hidden>
+        <div class="dashboard-header">
+          <div>
+            <p class="eyebrow">REMUS QUESTIONNAIRE</p>
+            <h1>Respostas recebidas</h1>
+            <p id="updated-at" class="muted"></p>
+          </div>
+          <div class="header-actions">
+            <button id="export-csv" class="secondary" type="button">Exportar CSV</button>
+            <button id="export-json" class="secondary" type="button">Exportar JSON</button>
+            <button id="logout" class="secondary" type="button">Sair</button>
+          </div>
+        </div>
+
+        <div id="summary" class="summary" aria-label="Resumo das respostas"></div>
+
+        <div class="filters">
+          <label>Buscar<input id="search" type="search" placeholder="Nome, e-mail ou resposta" /></label>
+          <label>Modalidade<select id="discipline"><option value="">Todas</option></select></label>
+          <label>Perfil<select id="role"><option value="">Todos</option></select></label>
+        </div>
+
+        <p id="result-count" class="muted"></p>
+        <div id="responses" class="responses"></div>
+        <div id="empty" class="empty" hidden>Nenhuma resposta corresponde aos filtros.</div>
+      </section>
+    </main>
+  </body>
+</html>
