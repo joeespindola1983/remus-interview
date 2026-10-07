@@ -1,4 +1,8 @@
-const questionnaireVersion = "2026-10-07.v2";
+const questionnaireVersion = "2026-10-07.v3";
+const responseEndpoint = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+  ? "/api/responses"
+  : "https://remus-app-recorder-backend.onrender.com/api/questionnaire/responses";
+const personalizedName = new URLSearchParams(window.location.search).get("name")?.trim().slice(0, 120) || "";
 
 const questions = [
   {
@@ -285,7 +289,7 @@ const questions = [
   }
 ];
 
-const state = { index: -1, answers: {}, consent: false, busy: false };
+const state = { index: -1, answers: {}, consent: false, busy: false, respondent: null };
 const screen = document.querySelector("#screen");
 const status = document.querySelector("#status");
 const progressRegion = document.querySelector("#progress-region");
@@ -300,11 +304,17 @@ function setScreen(content) {
   requestAnimationFrame(() => screen.querySelector("button")?.focus({ preventScroll: true }));
 }
 
+function escapeHtml(value) {
+  return value.replace(/[&<>'"]/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;"
+  })[character]);
+}
+
 function intro() {
   progressRegion.hidden = true;
   setScreen(`
     <p class="eyebrow">Pesquisa inicial · 7 a 10 minutos</p>
-    <h1>Ajude a construir o próximo Remus.</h1>
+    <h1>${personalizedName ? `${escapeHtml(personalizedName)}, ajude a construir o próximo Remus.` : "Ajude a construir o próximo Remus."}</h1>
     <p class="lead">Queremos entender como atletas, treinadores e clubes acompanham treinos hoje — e quais problemas realmente merecem uma solução.</p>
     <div class="meta-row"><span>Percurso personalizado</span><span>Respostas objetivas</span><span>Sem cadastro</span></div>
     <div class="actions"><button class="primary" type="button" data-action="start">Começar</button></div>
@@ -315,7 +325,7 @@ function consent() {
   setScreen(`
     <p class="eyebrow">Antes de começar</p>
     <h2>Sua participação é voluntária.</h2>
-    <div class="consent-box">As respostas serão usadas para pesquisa de mercado e decisões sobre produto, preço, posicionamento e aquisição do Remus. Não pedimos dados sensíveis neste questionário. Você pode parar a qualquer momento antes do envio. As respostas serão armazenadas por até 30 dias após o encerramento desta pesquisa.</div>
+    <div class="consent-box">As respostas serão usadas para pesquisa de mercado e decisões sobre produto, preço, posicionamento e aquisição do Remus. No final, você poderá informar nome e e-mail opcionalmente para receber um contato sobre a pesquisa. Você pode responder sem se identificar e parar a qualquer momento antes do envio. As respostas serão armazenadas por até 30 dias após o encerramento desta pesquisa.</div>
     <div class="actions">
       <button class="primary" type="button" data-action="consent">Concordo e quero participar</button>
       <button class="secondary" type="button" data-action="decline">Agora não</button>
@@ -361,7 +371,7 @@ function advanceToNextQuestion() {
     state.index += 1;
   }
   if (state.index < questions.length) question();
-  else submit();
+  else identify();
 }
 
 async function transition(next) {
@@ -399,17 +409,41 @@ async function choose(button) {
   });
 }
 
-async function submit() {
+function identify() {
+  progressRegion.hidden = true;
+  const safeName = escapeHtml(personalizedName);
+  setScreen(`
+    <p class="eyebrow">Última etapa</p>
+    <h2>${personalizedName ? `Este convite foi preparado para ${safeName}.` : "Quer se identificar?"}</h2>
+    <p class="lead">Nome e e-mail são opcionais. Se você informar algum deles, usaremos esses dados somente para conversar sobre esta pesquisa e um possível piloto.</p>
+    <form class="identity-form" id="identity-form">
+      <label for="respondent-name">Nome</label>
+      <input id="respondent-name" name="name" type="text" maxlength="120" autocomplete="name" value="${safeName}" placeholder="Seu nome" />
+      <label for="respondent-email">E-mail</label>
+      <input id="respondent-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="voce@exemplo.com" />
+      <p class="helper">Ao enviar com seus dados, você autoriza o Remus a entrar em contato sobre esta pesquisa. Seu e-mail nunca é colocado no link.</p>
+      <div class="actions">
+        <button class="primary" type="submit">Enviar com meus dados</button>
+        <button class="secondary" type="button" data-action="submit-anonymous">Enviar sem me identificar</button>
+      </div>
+    </form>
+  `);
+}
+
+async function submit(respondent = null) {
+  state.respondent = respondent;
   progressRegion.hidden = true;
   setScreen(`<p class="eyebrow">Enviando</p><h2>Guardando suas respostas…</h2><p class="lead">Isso deve levar apenas alguns segundos.</p>`);
   try {
-    const response = await fetch("/api/responses", {
+    const response = await fetch(responseEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         questionnaireVersion,
         consent: state.consent,
         locale: document.documentElement.lang,
+        contactConsent: Boolean(respondent),
+        respondent,
         answers: state.answers
       })
     });
@@ -448,9 +482,27 @@ screen.addEventListener("click", event => {
     transition(question);
   } else if (button.dataset.action === "decline") {
     transition(() => setScreen(`<p class="eyebrow">Tudo bem</p><h2>Obrigado pelo seu tempo.</h2><p class="lead">Nenhuma resposta foi enviada.</p>`));
-  } else if (button.dataset.action === "retry") submit();
+  } else if (button.dataset.action === "retry") submit(state.respondent);
+  else if (button.dataset.action === "submit-anonymous") submit(null);
   else if (button.dataset.action === "continue") transition(advanceToNextQuestion);
   else if (button.classList.contains("option")) choose(button);
+});
+
+screen.addEventListener("submit", event => {
+  if (event.target.id !== "identity-form") return;
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const name = String(formData.get("name") || "").trim();
+  const email = String(formData.get("email") || "").trim();
+  if (!name && !email) {
+    submit(null);
+    return;
+  }
+  submit({
+    name,
+    email,
+    source: personalizedName ? "personalized_link" : "questionnaire_form"
+  });
 });
 
 document.addEventListener("keydown", event => {

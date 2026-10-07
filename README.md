@@ -18,17 +18,27 @@ npm test
 
 ## Armazenamento das respostas
 
-`POST /api/responses` recebe uma resposta consentida e grava um registro NDJSON por linha. O caminho é definido por `RESPONSES_FILE` e, localmente, usa `data/responses.ndjson`.
+Em produção, o navegador envia as respostas para `POST https://remus-app-recorder-backend.onrender.com/api/questionnaire/responses`. O backend mantém um arquivo JSON por resposta no diretório persistente separado `questionnaire/`. O endpoint local `/api/responses` permanece apenas para desenvolvimento isolado.
 
-No Render, o `render.yaml` monta um disco persistente em `/var/data`. Configure também `ADMIN_TOKEN` como secret. A exportação exige `Authorization: Bearer <ADMIN_TOKEN>`:
+O backend precisa de Persistent Disk no Render. Sem o disco, respostas podem ser perdidas em reinicializações ou deploys. Configure `QUESTIONNAIRE_ADMIN_TOKEN` no serviço do backend. A exportação usa `X-Admin-Token`:
 
 ```bash
-curl -H "Authorization: Bearer $ADMIN_TOKEN" \
-  https://remus-interview.onrender.com/api/responses/export \
-  --output remus-questionnaire-responses.ndjson
+curl -H "X-Admin-Token: $QUESTIONNAIRE_ADMIN_TOKEN" \
+  https://remus-app-recorder-backend.onrender.com/api/questionnaire/responses \
+  --output remus-questionnaire-responses.json
 ```
 
-O endpoint de exportação permanece desabilitado quando `ADMIN_TOKEN` não está configurado.
+O endpoint de exportação permanece desabilitado quando `QUESTIONNAIRE_ADMIN_TOKEN` não está configurado.
+
+## Convites personalizados
+
+O parâmetro opcional `name` personaliza o convite e preenche o nome na etapa final:
+
+```text
+https://remus-interview.onrender.com/?name=Ana%20Silva
+```
+
+O nome só é armazenado se a pessoa escolher enviar a resposta identificada. Nunca coloque e-mail no link: parâmetros de URL podem aparecer no histórico do navegador e em logs de acesso.
 
 ## Decisões do MVP
 

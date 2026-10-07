@@ -31,7 +31,7 @@ test("health and response submission", async t => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      questionnaireVersion: "2026-10-07.v2",
+      questionnaireVersion: "2026-10-07.v3",
       consent: true,
       answers: Object.fromEntries(Array.from({ length: 20 }, (_, index) => [`q${index}`, "answer"]))
     })

@@ -60,7 +60,7 @@ async function readJsonBody(request) {
 
 function isValidSubmission(value) {
   return value
-    && value.questionnaireVersion === "2026-10-07.v2"
+    && value.questionnaireVersion === "2026-10-07.v3"
     && value.consent === true
     && value.answers
     && typeof value.answers === "object"
@@ -126,6 +126,8 @@ const server = createServer(async (request, response) => {
         questionnaireVersion: submission.questionnaireVersion,
         consent: true,
         locale: submission.locale || "pt-BR",
+        contactConsent: submission.contactConsent === true,
+        respondent: submission.contactConsent === true ? submission.respondent || null : null,
         answers: submission.answers
       };
       await appendFile(responsesFile, `${JSON.stringify(record)}\n`, { mode: 0o600 });

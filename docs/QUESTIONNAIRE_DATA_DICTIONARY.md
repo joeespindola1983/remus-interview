@@ -1,6 +1,6 @@
 # REMUS QUESTIONNAIRE — Data Dictionary
 
-Version: `2026-10-07.v2`
+Version: `2026-10-07.v3`
 
 This instrument records declared market-research responses. It does not create telemetry, sporting measurements, athlete profiles, activities, workouts, lineups, equipment records or evidence that a product capability exists.
 
@@ -33,6 +33,16 @@ Canonical sporting language comes from the Remus dictionaries. Research-only seg
 | `workoutTrackingNeed`, `currentTrackingGap` | Declared need and unmet need around workout follow-up. These are market-research responses, not diagnoses or measured quality. |
 | `mostUsefulOutcome`, `desiredTiming`, `primaryBarrier` | Product-value and adoption preferences. They do not establish product capability or technical feasibility. |
 | `likelyBuyer`, `purchaseIntent`, `monthlyPrice`, `pilotInterest` | Commercial research responses. They are not qualified leads, paid orders, deposits or advocacy signals by themselves. Qualification still follows the Q4 OKR evidence definitions. |
+
+## Optional respondent identity
+
+| Field | Meaning |
+|---|---|
+| URL `name` parameter | Optional invitation personalization only. It is displayed for confirmation and is not stored when the person chooses anonymous submission. Never put an email address in the URL. |
+| `contactConsent` | Explicit choice to submit identifying details for research or pilot follow-up. |
+| `respondent.name` | Optional confirmed name, limited to 120 characters. |
+| `respondent.email` | Optional confirmed email, limited to 254 characters. |
+| `respondent.source` | `personalized_link` when a URL name was confirmed, otherwise `questionnaire_form`. It is not an acquisition-channel attribution by itself. |
 
 ## Explicitly rejected modeling
 
