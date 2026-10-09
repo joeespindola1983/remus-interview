@@ -112,6 +112,11 @@ async function serveFile(request, response) {
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url, "http://localhost");
+    if ((request.method === "GET" || request.method === "HEAD") && ["/responses", "/responses/"].includes(url.pathname)) {
+      response.writeHead(308, { Location: `/admin/${url.search}` });
+      response.end();
+      return;
+    }
     if (request.method === "GET" && url.pathname === "/api/health") {
       json(response, 200, { status: "ok" });
       return;

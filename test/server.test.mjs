@@ -35,6 +35,22 @@ test("health and response submission", async t => {
   assert.equal(clubScript.status, 200);
   assert.match(await clubScript.text(), /club_detailed_questionnaire/);
 
+  const landingPage = await fetch(`${baseUrl}/`);
+  assert.equal(landingPage.status, 200);
+  assert.match(await landingPage.text(), /Qual pesquisa você quer responder/);
+
+  const initialPage = await fetch(`${baseUrl}/initial/`);
+  assert.equal(initialPage.status, 200);
+  assert.match(await initialPage.text(), /Pesquisa inicial/);
+
+  const adminPage = await fetch(`${baseUrl}/admin/`);
+  assert.equal(adminPage.status, 200);
+  assert.match(await adminPage.text(), /Área administrativa/);
+
+  const legacyAdminPage = await fetch(`${baseUrl}/responses/`, { redirect: "manual" });
+  assert.equal(legacyAdminPage.status, 308);
+  assert.equal(legacyAdminPage.headers.get("location"), "/admin/");
+
   const submission = await fetch(`${baseUrl}/api/responses`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

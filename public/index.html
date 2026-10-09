@@ -3,40 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#071613" />
-    <meta name="description" content="Questionário de pesquisa do Remus para atletas, treinadores e clubes." />
-    <title>REMUS QUESTIONNAIRE</title>
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Escolha uma pesquisa do Remus." />
+    <title>Pesquisas · REMUS QUESTIONNAIRE</title>
     <link rel="stylesheet" href="/styles.css" />
-    <script src="/app.js" type="module"></script>
+    <script src="/landing.js" type="module"></script>
   </head>
-  <body>
-    <a class="skip-link" href="#questionnaire">Ir para a pergunta</a>
-    <div class="ambient ambient-one" aria-hidden="true"></div>
-    <div class="ambient ambient-two" aria-hidden="true"></div>
-
+  <body class="landing-page">
+    <a class="skip-link" href="#questionnaires">Ir para os questionários</a>
     <header class="topbar">
       <a class="brand" href="/" aria-label="Remus Questionnaire — início">
         <span class="brand-mark" aria-hidden="true">R</span>
         <span><strong>REMUS</strong><small>QUESTIONNAIRE</small></span>
       </a>
-      <div class="text-size" role="group" aria-label="Tamanho do texto">
-        <button type="button" data-font="default" aria-pressed="true">A</button>
-        <button type="button" data-font="large" aria-pressed="false">A+</button>
-      </div>
     </header>
 
-    <main id="questionnaire" class="shell" tabindex="-1">
-      <div class="progress-region" id="progress-region" hidden>
-        <div class="progress-copy"><span id="progress-label">Pergunta 1</span><span id="progress-percent">0%</span></div>
-        <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <span id="progress-bar"></span>
-        </div>
-      </div>
+    <main id="questionnaires" class="landing-shell" tabindex="-1">
+      <p class="eyebrow">Pesquisas Remus</p>
+      <h1>Qual pesquisa você quer responder?</h1>
+      <p class="lead">Escolha o formato que combina com o momento da conversa. As respostas dos dois questionários são armazenadas e analisadas separadamente.</p>
 
-      <section id="screen" class="screen" aria-live="polite"></section>
-      <p id="status" class="sr-only" role="status"></p>
+      <div class="questionnaire-cards">
+        <article class="questionnaire-card">
+          <span class="card-number" aria-hidden="true">01</span>
+          <p class="card-meta">7 a 10 minutos · visão geral</p>
+          <h2>Pesquisa inicial</h2>
+          <p>Para entender sua relação com o esporte, como os treinos são acompanhados e quais resultados teriam valor.</p>
+          <ul>
+            <li>Indicada para novos participantes</li>
+            <li>Perguntas objetivas e adaptativas</li>
+            <li>Pode ser respondida à distância</li>
+          </ul>
+          <a class="primary card-action" id="initial-questionnaire-link" href="/initial/">Responder à pesquisa inicial</a>
+        </article>
+
+        <article class="questionnaire-card featured">
+          <span class="card-number" aria-hidden="true">02</span>
+          <p class="card-meta">Cerca de 12 minutos · aprofundamento</p>
+          <h2>Pesquisa detalhada</h2>
+          <p>Parte do treino mais recente para aprofundar decisões, dificuldades, piloto, modelo comercial e preço.</p>
+          <ul>
+            <li>Indicada para aplicação presencial no clube</li>
+            <li>Até 36 respostas, conforme o percurso</li>
+            <li>Preparada para várias pessoas no mesmo celular</li>
+          </ul>
+          <a class="primary card-action" id="club-questionnaire-link" href="/club/">Responder à pesquisa detalhada</a>
+        </article>
+      </div>
     </main>
 
-    <footer>Pesquisa de mercado Remus · respostas tratadas como evidência declarada, não como medição esportiva</footer>
+    <footer>REMUS QUESTIONNAIRE · <a href="/admin/">Acesso administrativo</a></footer>
   </body>
 </html>

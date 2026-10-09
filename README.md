@@ -6,8 +6,10 @@ Instrumentos de pesquisa de mercado do Remus. O vocabulário e os limites dos ca
 
 | Endereço | Instrumento | Revisão | Uso |
 |---|---|---|---|
-| `/` | `initial_market_questionnaire` | `2026-10-09.v4` | Pesquisa inicial remota |
+| `/` | — | — | Seletor dos questionários ativos |
+| `/initial/` | `initial_market_questionnaire` | `2026-10-09.v4` | Pesquisa inicial remota |
 | `/club/` | `club_detailed_questionnaire` | `2026-10-09.v1` | Pesquisa detalhada aplicada presencialmente no clube |
+| `/admin/` | — | — | Área administrativa de respostas |
 
 Cada resposta nova inclui `answers.researchInstrument` e `answers.instrumentRevision`. Respostas anteriores que não possuem esses campos são apresentadas no painel como `legacy_initial_questionnaire`. O valor de transporte `questionnaireVersion: 2026-10-07.v3` é mantido temporariamente para compatibilidade com o backend implantado e não deve ser usado para distinguir os instrumentos atuais.
 
@@ -44,19 +46,19 @@ O endpoint de exportação permanece desabilitado quando `QUESTIONNAIRE_ADMIN_TO
 O parâmetro opcional `name` personaliza o convite e preenche o nome na etapa final:
 
 ```text
-https://remus-interview.onrender.com/?name=Ana%20Silva
+https://remus-interview.onrender.com/initial/?name=Ana%20Silva
 ```
 
 O nome só é armazenado se a pessoa escolher enviar a resposta identificada. Nunca coloque e-mail no link: parâmetros de URL podem aparecer no histórico do navegador e em logs de acesso.
 
 ## Área de respostas
 
-Acesse `https://remus-interview.onrender.com/responses/` e informe o `QUESTIONNAIRE_ADMIN_TOKEN`. A página apresenta totais, filtros por instrumento, modalidade e perfil, respostas individuais e exportação JSON/CSV. O CSV coloca `researchInstrument` e `instrumentRevision` nas primeiras colunas de identificação.
+Acesse `https://remus-interview.onrender.com/admin/` e informe o `QUESTIONNAIRE_ADMIN_TOKEN`. A página apresenta totais, filtros por instrumento, modalidade e perfil, respostas individuais e exportação JSON/CSV. O CSV coloca `researchInstrument` e `instrumentRevision` nas primeiras colunas de identificação. O endereço antigo `/responses/` redireciona para `/admin/`.
 
 Para um link administrativo temporário, use o token no fragmento, não na query string:
 
 ```text
-https://remus-interview.onrender.com/responses/#token=SEU_TOKEN
+https://remus-interview.onrender.com/admin/#token=SEU_TOKEN
 ```
 
 O fragmento não é enviado ao servidor e é removido da barra de endereço assim que a página o lê. O token fica somente no `sessionStorage` da aba até “Sair” ou o fechamento da sessão.
