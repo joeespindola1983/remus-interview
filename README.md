@@ -7,8 +7,8 @@ Instrumentos de pesquisa de mercado do Remus. O vocabulário e os limites dos ca
 | Endereço | Instrumento | Revisão | Uso |
 |---|---|---|---|
 | `/` | — | — | Seletor dos questionários ativos |
-| `/initial/` | `initial_market_questionnaire` | `2026-10-09.v4` | Pesquisa inicial remota |
-| `/club/` | `club_detailed_questionnaire` | `2026-10-09.v1` | Pesquisa detalhada aplicada presencialmente no clube |
+| `/initial/` | `initial_market_questionnaire` | `2026-10-09.v5` | Pesquisa inicial remota |
+| `/club/` | `club_detailed_questionnaire` | `2026-10-09.v2` | Pesquisa detalhada aplicada presencialmente no clube |
 | `/admin/` | — | — | Área administrativa de respostas |
 
 Cada resposta nova inclui `answers.researchInstrument` e `answers.instrumentRevision`. Respostas anteriores que não possuem esses campos são apresentadas no painel como `legacy_initial_questionnaire`. O valor de transporte `questionnaireVersion: 2026-10-07.v3` é mantido temporariamente para compatibilidade com o backend implantado e não deve ser usado para distinguir os instrumentos atuais.

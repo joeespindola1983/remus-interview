@@ -195,8 +195,8 @@ const questions = [
   },
   {
     id: "acceptableSetupTime", section: "3 · Remus, piloto e preço",
-    title: "Quanto tempo de preparação antes do treino seria aceitável?",
-    options: [["almost_none", "Praticamente nenhum"], ["up_to_2_minutes", "Até 2 minutos"], ["up_to_5_minutes", "Até 5 minutos"], ["more_than_5_if_valuable", "Mais de 5 minutos, se o benefício compensar"]]
+    title: "Antes de cada treino, quanto tempo você aceitaria gastar para instalar e conferir o Remus?",
+    options: [["up_to_1_minute", "Até 1 minuto"], ["2_to_3_minutes", "De 2 a 3 minutos"], ["4_to_5_minutes", "De 4 a 5 minutos"], ["6_to_10_minutes", "De 6 a 10 minutos"], ["would_not_use_if_setup", "Eu não usaria se precisasse preparar a cada treino"]]
   },
   {
     id: "adoptionBlockers", section: "3 · Remus, piloto e preço",
@@ -215,9 +215,9 @@ const questions = [
     options: [["initial_support", "Suporte inicial"], ["installation_help", "Ajuda na instalação"], ["equipment_provided", "Equipamento fornecido pelo Remus"], ["data_privacy", "Explicação sobre privacidade dos dados"], ["compatibility", "Confirmação de compatibilidade"], ["no_cost", "Participação sem custo"], ["club_or_coach_approval", "Autorização do clube ou treinador"]]
   },
   {
-    id: "likelyBuyers", section: "3 · Remus, piloto e preço",
-    title: "Quem deveria participar da decisão de compra?", multiple: true, exclusiveValues: ["unknown"],
-    options: [["athlete", "Atleta"], ["coach", "Treinador(a)"], ["club", "Clube ou equipe"], ["equipment_manager", "Responsável por equipamentos"], ["sponsor", "Patrocinador"], ["unknown", "Ainda não sei"]]
+    id: "expectedPayer", section: "3 · Remus, piloto e preço",
+    title: "Se você decidisse usar o Remus, quem provavelmente pagaria?",
+    options: [["self", "Eu mesmo(a)"], ["shared_with_others", "Eu dividiria o custo com outras pessoas"], ["club_or_team", "Clube ou equipe"], ["sponsor", "Patrocinador"], ["other", "Outra pessoa ou organização"], ["unknown", "Ainda não sei"]]
   },
   {
     id: "preferredCommercialModel", section: "3 · Remus, piloto e preço",
@@ -230,15 +230,16 @@ const questions = [
     options: [["up_to_brl_499", "Até R$ 499"], ["brl_500_to_999", "R$ 500 a R$ 999"], ["brl_1000_to_1499", "R$ 1.000 a R$ 1.499"], ["brl_1500_to_2499", "R$ 1.500 a R$ 2.499"], ["brl_2500_or_more", "R$ 2.500 ou mais"], ["organization_should_pay", "Esperaria que clube, equipe ou patrocinador pagasse"], ["would_not_buy", "Eu não compraria"]]
   },
   {
-    id: "optionalServicePriceRange", section: "3 · Remus, piloto e preço",
-    title: "E por um serviço mensal opcional com histórico, comparações e análises?",
-    options: [["free_only", "Usaria somente os recursos incluídos"], ["brl_20_to_49", "R$ 20 a R$ 49 por mês"], ["brl_50_to_99", "R$ 50 a R$ 99 por mês"], ["brl_100_to_199", "R$ 100 a R$ 199 por mês"], ["brl_200_or_more", "R$ 200 ou mais por mês"], ["organization_should_pay", "Esperaria que uma organização pagasse"]]
+    id: "monthlyServicePriceCeiling", section: "3 · Remus, piloto e preço",
+    title: "Qual seria o valor máximo que você pagaria por mês pelo aplicativo do Remus?",
+    helper: "Considere histórico de treinos, comparações e análises para uso individual.",
+    options: [["would_not_pay_monthly", "Não pagaria mensalidade"], ["brl_5_to_15", "De R$ 5 a R$ 15 por mês"], ["brl_16_to_30", "De R$ 16 a R$ 30 por mês"], ["brl_31_to_60", "De R$ 31 a R$ 60 por mês"], ["brl_61_to_100", "De R$ 61 a R$ 100 por mês"], ["above_brl_100", "Mais de R$ 100 por mês"]]
   }
 ];
 
 mountQuestionnaire({
   instrumentId: "club_detailed_questionnaire",
-  revision: "2026-10-09.v1",
+  revision: "2026-10-09.v2",
   displayName: "Pesquisa detalhada Remus — clube",
   collectionMode: "club_intercept",
   defaultSource: "club_intercept",

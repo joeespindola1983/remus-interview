@@ -111,9 +111,9 @@ const questions = [
     options: [["complex_setup", "Instalação ou preparação complicada"], ["hard_to_understand", "Resultados difíceis de entender"], ["lack_of_trust", "Falta de confiança nos resultados"], ["battery", "Autonomia insuficiente"], ["water_resistance", "Resistência inadequada à água"], ["compatibility", "Incompatibilidade com meu equipamento"], ["price", "Preço"]]
   },
   {
-    id: "likelyBuyers", section: "Adoção e piloto",
-    title: "Quem poderia participar da decisão de compra?", multiple: true, exclusiveValues: ["unknown"],
-    options: [["athlete", "O próprio atleta"], ["coach", "Treinador(a)"], ["club", "Clube ou equipe"], ["equipment_manager", "Responsável pelos equipamentos"], ["sponsor", "Patrocinador"], ["unknown", "Ainda não sei"]]
+    id: "expectedPayer", section: "Adoção e piloto",
+    title: "Se você decidisse usar o Remus, quem provavelmente pagaria?",
+    options: [["self", "Eu mesmo(a)"], ["shared_with_others", "Eu dividiria o custo com outras pessoas"], ["club_or_team", "Clube ou equipe"], ["sponsor", "Patrocinador"], ["other", "Outra pessoa ou organização"], ["unknown", "Ainda não sei"]]
   },
   {
     id: "purchaseIntent", section: "Adoção e piloto",
@@ -121,9 +121,10 @@ const questions = [
     options: [["definitely", "Sim, com certeza"], ["probably", "Provavelmente sim"], ["depends", "Dependeria do preço e da comprovação"], ["probably_not", "Provavelmente não"], ["no", "Não"]]
   },
   {
-    id: "monthlyPrice", section: "Adoção e piloto",
-    title: "Se houvesse um serviço mensal opcional, qual faixa pareceria razoável?",
-    options: [["free_only", "Usaria somente recursos incluídos gratuitamente"], ["brl_20_to_49", "R$ 20 a R$ 49"], ["brl_50_to_99", "R$ 50 a R$ 99"], ["brl_100_to_199", "R$ 100 a R$ 199"], ["brl_200_or_more", "R$ 200 ou mais"], ["organization_pays", "Esperaria que clube ou equipe pagasse"]]
+    id: "monthlyServicePriceCeiling", section: "Adoção e piloto",
+    title: "Qual seria o valor máximo que você pagaria por mês pelo aplicativo do Remus?",
+    helper: "Considere histórico de treinos, comparações e análises para uso individual.",
+    options: [["would_not_pay_monthly", "Não pagaria mensalidade"], ["brl_5_to_15", "De R$ 5 a R$ 15 por mês"], ["brl_16_to_30", "De R$ 16 a R$ 30 por mês"], ["brl_31_to_60", "De R$ 31 a R$ 60 por mês"], ["brl_61_to_100", "De R$ 61 a R$ 100 por mês"], ["above_brl_100", "Mais de R$ 100 por mês"]]
   },
   {
     id: "pilotInterest", section: "Adoção e piloto",
@@ -134,8 +135,8 @@ const questions = [
 
 mountQuestionnaire({
   instrumentId: "initial_market_questionnaire",
-  revision: "2026-10-09.v4",
-  displayName: "Pesquisa inicial Remus — revisão 4",
+  revision: "2026-10-09.v5",
+  displayName: "Pesquisa inicial Remus — revisão 5",
   collectionMode: "remote_self_service",
   defaultSource: "personal_invitation",
   allowPersonalizedName: true,

@@ -1,6 +1,6 @@
 # REMUS QUESTIONNAIRE — Data Dictionary
 
-Active instrument revisions: `initial_market_questionnaire@2026-10-09.v4` and `club_detailed_questionnaire@2026-10-09.v1`
+Active instrument revisions: `initial_market_questionnaire@2026-10-09.v5` and `club_detailed_questionnaire@2026-10-09.v2`
 
 Transport compatibility version: `2026-10-07.v3`
 
@@ -57,11 +57,11 @@ The backend currently accepts only the historical transport value `questionnaire
 | `workoutDataUse` | What the respondent reports doing with recorded information. Sharing with a coach, athlete, crew or club does not imply an `accessGrant`. |
 | `workoutTrackingNeed`, `currentTrackingGap` | Declared need and unmet need around workout follow-up. These are market-research responses, not diagnoses or measured quality. |
 | `mostUsefulOutcome`, `desiredTiming`, `primaryBarrier` | Product-value and adoption preferences. They do not establish product capability or technical feasibility. |
-| `likelyBuyer`, `purchaseIntent`, `monthlyPrice`, `pilotInterest` | Commercial research responses. They are not qualified leads, paid orders, deposits or advocacy signals by themselves. Qualification still follows the Q4 OKR evidence definitions. |
+| `expectedPayer`, `purchaseIntent`, `monthlyServicePriceCeiling`, `pilotInterest` | Commercial research responses. `expectedPayer` records who the respondent expects would pay. `monthlyServicePriceCeiling` records the respondent's declared maximum individual monthly payment in mutually exclusive, non-overlapping BRL bands; it must not be interpreted as an accepted offer or combined with payer identity. These responses are not qualified leads, paid orders, deposits or advocacy signals by themselves. Qualification still follows the Q4 OKR evidence definitions. |
 
 Detailed-club fields are declarations about one recalled recent workout. Names beginning with `recentWorkout` do not create an `activity`, `recording`, `workoutSession`, `sessionReview`, `metricObservation`, source association or evidence lineage. Answers about improvement, technique, conditions or trust retain the participant's interpretation only.
 
-`valuableOutcomes`, `primaryValuableOutcome`, `valuableTimings`, `primaryValuableTiming`, `pilotCommitment`, `pilotConditions`, `preferredCommercialModel`, `hardwarePriceRange` and `optionalServicePriceRange` are product-research responses. They do not prove useful outcomes, repeated use, willingness to pay, unit economics or commercial readiness.
+`valuableOutcomes`, `primaryValuableOutcome`, `valuableTimings`, `primaryValuableTiming`, `pilotCommitment`, `pilotConditions`, `preferredCommercialModel`, `hardwarePriceRange` and `monthlyServicePriceCeiling` are product-research responses. They do not prove useful outcomes, repeated use, willingness to pay, unit economics or commercial readiness.
 
 ## Optional respondent identity
 

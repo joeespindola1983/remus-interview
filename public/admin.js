@@ -36,8 +36,11 @@ const fieldLabels = {
   desiredTiming: "Momento de maior valor",
   primaryBarrier: "Barreira de adoção",
   likelyBuyer: "Provável comprador",
+  acceptableSetupTime: "Tempo aceitável de preparação",
+  expectedPayer: "Quem provavelmente pagaria",
   purchaseIntent: "Intenção de pagamento",
   monthlyPrice: "Faixa mensal",
+  monthlyServicePriceCeiling: "Valor mensal máximo",
   pilotInterest: "Interesse no piloto"
 };
 
@@ -66,6 +69,9 @@ const valueLabels = {
   self: "O próprio atleta", club: "Clube ou equipe", sponsor: "Patrocinador", unknown: "Não sabe",
   definitely: "Sim, com certeza", probably: "Provavelmente sim", depends: "Depende do preço/comprovação", probably_not: "Provavelmente não", no: "Não",
   free_only: "Somente gratuito", brl_20_to_49: "R$ 20–49", brl_50_to_99: "R$ 50–99", brl_100_to_199: "R$ 100–199", brl_200_or_more: "R$ 200 ou mais", organization_pays: "Clube/equipe pagaria",
+  up_to_1_minute: "Até 1 minuto", "2_to_3_minutes": "2–3 minutos", "4_to_5_minutes": "4–5 minutos", "6_to_10_minutes": "6–10 minutos", would_not_use_if_setup: "Não usaria com preparação recorrente",
+  shared_with_others: "Dividiria o custo", club_or_team: "Clube ou equipe",
+  would_not_pay_monthly: "Não pagaria mensalidade", brl_5_to_15: "R$ 5–15", brl_16_to_30: "R$ 16–30", brl_31_to_60: "R$ 31–60", brl_61_to_100: "R$ 61–100", above_brl_100: "Mais de R$ 100",
   yes: "Sim", maybe: "Talvez", questionnaire_only: "Somente questionário"
 };
 

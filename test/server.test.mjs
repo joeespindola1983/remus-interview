@@ -33,7 +33,10 @@ test("health and response submission", async t => {
 
   const clubScript = await fetch(`${baseUrl}/club/club.js`);
   assert.equal(clubScript.status, 200);
-  assert.match(await clubScript.text(), /club_detailed_questionnaire/);
+  const clubScriptText = await clubScript.text();
+  assert.match(clubScriptText, /club_detailed_questionnaire/);
+  assert.match(clubScriptText, /2026-10-09\.v2/);
+  assert.match(clubScriptText, /brl_5_to_15/);
 
   const landingPage = await fetch(`${baseUrl}/`);
   assert.equal(landingPage.status, 200);
@@ -42,6 +45,12 @@ test("health and response submission", async t => {
   const initialPage = await fetch(`${baseUrl}/initial/`);
   assert.equal(initialPage.status, 200);
   assert.match(await initialPage.text(), /Pesquisa inicial/);
+
+  const initialScript = await fetch(`${baseUrl}/app.js`);
+  assert.equal(initialScript.status, 200);
+  const initialScriptText = await initialScript.text();
+  assert.match(initialScriptText, /2026-10-09\.v5/);
+  assert.match(initialScriptText, /brl_5_to_15/);
 
   const adminPage = await fetch(`${baseUrl}/admin/`);
   assert.equal(adminPage.status, 200);
@@ -59,7 +68,7 @@ test("health and response submission", async t => {
       consent: true,
       answers: {
         researchInstrument: "club_detailed_questionnaire",
-        instrumentRevision: "2026-10-09.v1",
+        instrumentRevision: "2026-10-09.v2",
         ...Object.fromEntries(Array.from({ length: 18 }, (_, index) => [`q${index}`, "answer"]))
       }
     })
