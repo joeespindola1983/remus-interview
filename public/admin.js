@@ -1,12 +1,28 @@
 const endpoint = "https://remus-app-recorder-backend.onrender.com/api/questionnaire/responses";
 
 const fieldLabels = {
+  researchInstrument: "Instrumento de pesquisa",
+  instrumentRevision: "Revisão do instrumento",
+  collectionMode: "Modo de coleta",
+  sourceCampaign: "Origem da coleta",
+  sourceClub: "Clube informado",
+  participantRoles: "Relações com o esporte",
+  primaryParticipantRole: "Relação principal",
   participantRole: "Relação com o esporte",
+  sportDisciplines: "Modalidades",
+  primarySportDiscipline: "Modalidade principal",
   sportDiscipline: "Modalidade",
+  rowingDisciplines: "Tipos de palamenta",
   rowingDiscipline: "Tipo de palamenta",
+  rowingBoatClasses: "Classes de barco no Remo",
+  vaaBoatClasses: "Classes no Va'a",
+  vaaTrainingContexts: "Contextos no Va'a",
   vaaTrainingContext: "Contexto no Va'a",
   experienceLevel: "Tempo na modalidade",
+  athleteWeeklyTrainingFrequency: "Treinos realizados por semana",
+  coachWeeklyTrainingFrequency: "Treinos orientados por semana",
   weeklyTrainingFrequency: "Treinos por semana",
+  participationContexts: "Contextos de participação",
   participationContext: "Contexto de participação",
   workoutRecordingFrequency: "Frequência de registro",
   noWorkoutRecordingReason: "Motivo para não registrar",
@@ -26,6 +42,10 @@ const fieldLabels = {
 };
 
 const valueLabels = {
+  initial_market_questionnaire: "Pesquisa inicial",
+  club_detailed_questionnaire: "Pesquisa detalhada no clube",
+  remote_self_service: "Resposta remota",
+  club_intercept: "Coleta presencial no clube",
   athlete: "Atleta ou praticante", coach: "Treinador(a)", club_leader: "Gestor(a) de clube ou equipe", equipment_manager: "Responsável por equipamentos",
   rowing: "Remo", vaa: "Va'a / canoa havaiana", rowing_and_vaa: "Remo e Va'a", other: "Outro",
   sculling: "Palamenta dupla", sweep: "Palamenta simples", sculling_and_sweep: "Palamenta dupla e simples", not_sure: "Não tem certeza",
@@ -49,6 +69,12 @@ const valueLabels = {
   yes: "Sim", maybe: "Talvez", questionnaire_only: "Somente questionário"
 };
 
+const instrumentLabels = {
+  initial_market_questionnaire: "Pesquisa inicial",
+  club_detailed_questionnaire: "Pesquisa detalhada no clube",
+  legacy_initial_questionnaire: "Pesquisa inicial anterior"
+};
+
 let allResponses = [];
 let currentToken = "";
 
@@ -61,6 +87,15 @@ const emptyElement = document.querySelector("#empty");
 function text(value) {
   if (Array.isArray(value)) return value.map(item => valueLabels[item] || item).join(", ");
   return valueLabels[value] || String(value ?? "—");
+}
+
+function instrumentFor(item) {
+  return item.answers?.researchInstrument || "legacy_initial_questionnaire";
+}
+
+function valuesFor(item, pluralField, legacyField) {
+  const value = item.answers?.[pluralField] ?? item.answers?.[legacyField];
+  return Array.isArray(value) ? value : value ? [value] : [];
 }
 
 function date(value) {
@@ -84,23 +119,28 @@ async function loadResponses(token) {
 }
 
 function populateFilters() {
+  const instrument = document.querySelector("#instrument");
   const discipline = document.querySelector("#discipline");
   const role = document.querySelector("#role");
-  const disciplines = [...new Set(allResponses.map(item => item.answers?.sportDiscipline).filter(Boolean))];
-  const roles = [...new Set(allResponses.map(item => item.answers?.participantRole).filter(Boolean))];
+  const instruments = [...new Set(allResponses.map(instrumentFor))];
+  const disciplines = [...new Set(allResponses.flatMap(item => valuesFor(item, "sportDisciplines", "sportDiscipline")))];
+  const roles = [...new Set(allResponses.flatMap(item => valuesFor(item, "participantRoles", "participantRole")))];
+  instrument.replaceChildren(new Option("Todos", ""), ...instruments.map(value => new Option(instrumentLabels[value] || value, value)));
   discipline.replaceChildren(new Option("Todas", ""), ...disciplines.map(value => new Option(text(value), value)));
   role.replaceChildren(new Option("Todos", ""), ...roles.map(value => new Option(text(value), value)));
 }
 
 function filteredResponses() {
   const query = document.querySelector("#search").value.trim().toLocaleLowerCase("pt-BR");
+  const instrument = document.querySelector("#instrument").value;
   const discipline = document.querySelector("#discipline").value;
   const role = document.querySelector("#role").value;
   return allResponses.filter(item => {
     const searchable = JSON.stringify(item).toLocaleLowerCase("pt-BR");
     return (!query || searchable.includes(query))
-      && (!discipline || item.answers?.sportDiscipline === discipline)
-      && (!role || item.answers?.participantRole === role);
+      && (!instrument || instrumentFor(item) === instrument)
+      && (!discipline || valuesFor(item, "sportDisciplines", "sportDiscipline").includes(discipline))
+      && (!role || valuesFor(item, "participantRoles", "participantRole").includes(role));
   });
 }
 
@@ -114,8 +154,8 @@ function render() {
 
 function renderSummary() {
   const identified = allResponses.filter(item => item.respondent?.name || item.respondent?.email).length;
-  const rowing = allResponses.filter(item => ["rowing", "rowing_and_vaa"].includes(item.answers?.sportDiscipline)).length;
-  const vaa = allResponses.filter(item => ["vaa", "rowing_and_vaa"].includes(item.answers?.sportDiscipline)).length;
+  const rowing = allResponses.filter(item => valuesFor(item, "sportDisciplines", "sportDiscipline").some(value => ["rowing", "rowing_and_vaa"].includes(value))).length;
+  const vaa = allResponses.filter(item => valuesFor(item, "sportDisciplines", "sportDiscipline").some(value => ["vaa", "rowing_and_vaa"].includes(value))).length;
   const values = [[allResponses.length, "Total"], [identified, "Identificadas"], [rowing, "Remo"], [vaa, "Va'a"]];
   document.querySelector("#summary").replaceChildren(...values.map(([number, label]) => {
     const card = document.createElement("div"); card.className = "summary-card";
@@ -133,7 +173,7 @@ function responseCard(item, index) {
   const email = document.createElement("span"); email.textContent = item.respondent?.email || "Resposta anônima";
   respondent.append(name, email);
   const tags = document.createElement("span"); tags.className = "tags";
-  [item.answers?.participantRole, item.answers?.sportDiscipline].filter(Boolean).forEach(value => { const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = text(value); tags.append(tag); });
+  [instrumentLabels[instrumentFor(item)], ...valuesFor(item, "participantRoles", "participantRole"), ...valuesFor(item, "sportDisciplines", "sportDiscipline")].filter(Boolean).forEach(value => { const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = text(value); tags.append(tag); });
   const received = document.createElement("span"); received.className = "response-date"; received.textContent = date(item.receivedAt);
   summary.append(respondent, tags, received);
 
@@ -152,9 +192,10 @@ function download(filename, content, type) {
 
 function csv() {
   const fields = [...new Set(allResponses.flatMap(item => Object.keys(item.answers || {})))];
-  const header = ["responseId", "receivedAt", "name", "email", ...fields];
+  const answerFields = fields.filter(field => !["researchInstrument", "instrumentRevision"].includes(field));
+  const header = ["responseId", "receivedAt", "researchInstrument", "instrumentRevision", "name", "email", ...answerFields];
   const escape = value => `"${String(value ?? "").replaceAll('"', '""')}"`;
-  const rows = allResponses.map(item => [item.responseId, item.receivedAt, item.respondent?.name, item.respondent?.email, ...fields.map(field => text(item.answers?.[field]))]);
+  const rows = allResponses.map(item => [item.responseId, item.receivedAt, instrumentFor(item), item.answers?.instrumentRevision || item.questionnaireVersion, item.respondent?.name, item.respondent?.email, ...answerFields.map(field => text(item.answers?.[field]))]);
   return [header, ...rows].map(row => row.map(escape).join(",")).join("\n");
 }
 
@@ -163,7 +204,7 @@ document.querySelector("#login-form").addEventListener("submit", async event => 
   try { await loadResponses(document.querySelector("#token").value); }
   catch (error) { loginError.textContent = error.message; loginError.hidden = false; }
 });
-document.querySelectorAll("#search, #discipline, #role").forEach(control => control.addEventListener("input", render));
+document.querySelectorAll("#search, #instrument, #discipline, #role").forEach(control => control.addEventListener("input", render));
 document.querySelector("#export-json").addEventListener("click", () => download("remus-questionnaire-responses.json", JSON.stringify(allResponses, null, 2), "application/json"));
 document.querySelector("#export-csv").addEventListener("click", () => download("remus-questionnaire-responses.csv", csv(), "text/csv;charset=utf-8"));
 document.querySelector("#logout").addEventListener("click", () => { sessionStorage.removeItem("remusQuestionnaireToken"); location.reload(); });

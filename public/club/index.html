@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071613" />
+    <meta name="description" content="Pesquisa detalhada do Remus aplicada presencialmente em clubes." />
+    <title>Pesquisa detalhada · REMUS QUESTIONNAIRE</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/club/club.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#questionnaire">Ir para a pergunta</a>
+    <header class="topbar">
+      <a class="brand" href="/club/" aria-label="Remus Questionnaire — pesquisa detalhada">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span><strong>REMUS</strong><small>PESQUISA DETALHADA</small></span>
+      </a>
+      <div class="text-size" role="group" aria-label="Tamanho do texto">
+        <button type="button" data-font="default" aria-pressed="true">A</button>
+        <button type="button" data-font="large" aria-pressed="false">A+</button>
+      </div>
+    </header>
+    <main id="questionnaire" class="shell" tabindex="-1">
+      <div class="progress-region" id="progress-region" hidden>
+        <div class="progress-copy"><span id="progress-label">Pergunta 1</span><span id="progress-percent">0%</span></div>
+        <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-bar"></span></div>
+      </div>
+      <section id="screen" class="screen" aria-live="polite"></section>
+      <p id="status" class="sr-only" role="status"></p>
+    </main>
+    <footer>Pesquisa presencial Remus · uma resposta por participante</footer>
+  </body>
+</html>

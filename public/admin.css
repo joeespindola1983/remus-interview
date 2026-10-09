@@ -54,7 +54,7 @@ h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -0.04em; li
 .summary-card strong { display: block; font-size: 2rem; letter-spacing: -0.04em; }
 .summary-card span { color: var(--text-secondary); font-size: 0.82rem; }
 
-.filters { display: grid; grid-template-columns: minmax(16rem, 2fr) repeat(2, minmax(10rem, 1fr)); gap: 0.8rem; margin-top: 2rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.filters { display: grid; grid-template-columns: minmax(16rem, 2fr) repeat(3, minmax(10rem, 1fr)); gap: 0.8rem; margin-top: 2rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius-lg); }
 .filters label { display: grid; gap: 0.4rem; color: var(--text-secondary); font-size: 0.78rem; font-weight: 650; }
 
 .responses { display: grid; gap: 1rem; margin-top: 1rem; }

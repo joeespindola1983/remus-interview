@@ -1,6 +1,15 @@
 # REMUS QUESTIONNAIRE
 
-Questionário temporário de pesquisa de mercado para o OKR KAN-41: validar necessidades, disposição de pagamento e interesse em piloto com 15–20 potenciais usuários do Remus. O vocabulário e os limites dos campos estão documentados em [`docs/QUESTIONNAIRE_DATA_DICTIONARY.md`](docs/QUESTIONNAIRE_DATA_DICTIONARY.md).
+Instrumentos de pesquisa de mercado do Remus. O vocabulário e os limites dos campos estão documentados em [`docs/QUESTIONNAIRE_DATA_DICTIONARY.md`](docs/QUESTIONNAIRE_DATA_DICTIONARY.md).
+
+## Instrumentos ativos
+
+| Endereço | Instrumento | Revisão | Uso |
+|---|---|---|---|
+| `/` | `initial_market_questionnaire` | `2026-10-09.v4` | Pesquisa inicial remota |
+| `/club/` | `club_detailed_questionnaire` | `2026-10-09.v1` | Pesquisa detalhada aplicada presencialmente no clube |
+
+Cada resposta nova inclui `answers.researchInstrument` e `answers.instrumentRevision`. Respostas anteriores que não possuem esses campos são apresentadas no painel como `legacy_initial_questionnaire`. O valor de transporte `questionnaireVersion: 2026-10-07.v3` é mantido temporariamente para compatibilidade com o backend implantado e não deve ser usado para distinguir os instrumentos atuais.
 
 ## Executar localmente
 
@@ -42,7 +51,7 @@ O nome só é armazenado se a pessoa escolher enviar a resposta identificada. Nu
 
 ## Área de respostas
 
-Acesse `https://remus-interview.onrender.com/responses/` e informe o `QUESTIONNAIRE_ADMIN_TOKEN`. A página apresenta totais, filtros, respostas individuais e exportação JSON/CSV.
+Acesse `https://remus-interview.onrender.com/responses/` e informe o `QUESTIONNAIRE_ADMIN_TOKEN`. A página apresenta totais, filtros por instrumento, modalidade e perfil, respostas individuais e exportação JSON/CSV. O CSV coloca `researchInstrument` e `instrumentRevision` nas primeiras colunas de identificação.
 
 Para um link administrativo temporário, use o token no fragmento, não na query string:
 
@@ -60,6 +69,10 @@ O fragmento não é enviado ao servidor e é removido da barra de endereço assi
 - Consentimento antes das perguntas e retenção comunicada de 30 dias após o encerramento.
 - Identificadores duráveis em inglês; Remo, Va'a e remo indoor permanecem segmentos distintos.
 - Nenhuma resposta é tratada como telemetria ou medição esportiva.
+- Perguntas de realidades simultâneas usam múltipla escolha; perguntas de prioridade e de um episódio específico permanecem únicas.
+- Toda pergunta permite voltar; uma revisão completa precede o envio.
+- Rascunhos são separados por instrumento e revisão no armazenamento local. Após envio confirmado, o rascunho é removido.
+- A coleta presencial oferece “Preparar para a próxima pessoa” e nunca reutiliza respostas do participante anterior.
 
 ## Plano de duas semanas
 

@@ -1,6 +1,8 @@
 # REMUS QUESTIONNAIRE — Data Dictionary
 
-Version: `2026-10-07.v3`
+Active instrument revisions: `initial_market_questionnaire@2026-10-09.v4` and `club_detailed_questionnaire@2026-10-09.v1`
+
+Transport compatibility version: `2026-10-07.v3`
 
 This instrument records declared market-research responses. It does not create telemetry, sporting measurements, athlete profiles, activities, workouts, lineups, equipment records or evidence that a product capability exists.
 
@@ -16,6 +18,29 @@ Canonical sporting language comes from the Remus dictionaries. Research-only seg
 | `currentTracking=rowerg` | `rowerg` | Refers specifically to the Concept2 `concept2DeviceType: rowerg` context. It does not mean PM5; the PM5 is a performance monitor and is not the ergometer. |
 | `primaryReviewer=crew` | `crew` | Reuses the canonical human-context entity `crew`; Brazilian rowing UI may say “equipe ou guarnição”. |
 | `mostUsefulOutcome=training_plan_comparison` | `training_plan_comparison` | Refers to comparison between a canonical `trainingPlan`/prescribed `workoutSession` and performed evidence. It does not assert that this capability exists. |
+
+The current instruments use plural research fields where simultaneous answers are valid:
+
+| Current field | Contract |
+|---|---|
+| `sportDisciplines` | Array containing canonical `rowing`, `vaa` and/or `indoor_rowing`; `other` remains research-only. It replaces the old combined response `rowing_and_vaa` in new output. |
+| `rowingDisciplines` | Array containing canonical `sculling` and/or `sweep`; `not_sure` is exclusive and research-only. |
+| `rowingBoatClasses` | Research selection using canonical rowing-class identifiers where one class is represented directly. Grouped answers such as `pair_or_coxed_pair` are research-only and must not create a normalized boat-class record. |
+| `vaaBoatClasses` | Source-system-qualified values such as `vaa_v:v1` and `outrigger_oc:oc1`. They preserve V and OC nomenclature and do not claim a governing ruleset or competition eligibility. |
+| `recentWorkoutTargets` and `recentWorkoutLiveInformation` | Declared targets/information from one recalled workout. Canonical metric identifiers are reused, but the answers are not observations. |
+| `recentWorkoutPattern` | Research classification related to canonical training patterns. `starts_or_race_simulation`, `competition` and `unstructured` are coarse response options and do not create a prescribed `workoutSession`. |
+
+## Instrument identity
+
+| Field | Meaning |
+|---|---|
+| `researchInstrument` | Durable research instrument identifier: `initial_market_questionnaire` or `club_detailed_questionnaire`. Missing on older records and mapped by the dashboard to `legacy_initial_questionnaire`. |
+| `instrumentRevision` | Revision of question wording, answer choices and branching. Never merge revisions without an explicit analytical mapping. |
+| `collectionMode` | `remote_self_service` or `club_intercept`; describes how the declaration was collected, not who measured an activity. |
+| `sourceCampaign` | Optional acquisition/source label supplied by the link. It is not a qualified lead by itself. |
+| `sourceClub` | Optional source-club text supplied by the collection link. It does not create an organization membership or prove club authorization. |
+
+The backend currently accepts only the historical transport value `questionnaireVersion: 2026-10-07.v3`. Instrument analysis and export must use `researchInstrument` plus `instrumentRevision`, not that compatibility envelope.
 
 ## Research-only fields
 
@@ -33,6 +58,10 @@ Canonical sporting language comes from the Remus dictionaries. Research-only seg
 | `workoutTrackingNeed`, `currentTrackingGap` | Declared need and unmet need around workout follow-up. These are market-research responses, not diagnoses or measured quality. |
 | `mostUsefulOutcome`, `desiredTiming`, `primaryBarrier` | Product-value and adoption preferences. They do not establish product capability or technical feasibility. |
 | `likelyBuyer`, `purchaseIntent`, `monthlyPrice`, `pilotInterest` | Commercial research responses. They are not qualified leads, paid orders, deposits or advocacy signals by themselves. Qualification still follows the Q4 OKR evidence definitions. |
+
+Detailed-club fields are declarations about one recalled recent workout. Names beginning with `recentWorkout` do not create an `activity`, `recording`, `workoutSession`, `sessionReview`, `metricObservation`, source association or evidence lineage. Answers about improvement, technique, conditions or trust retain the participant's interpretation only.
+
+`valuableOutcomes`, `primaryValuableOutcome`, `valuableTimings`, `primaryValuableTiming`, `pilotCommitment`, `pilotConditions`, `preferredCommercialModel`, `hardwarePriceRange` and `optionalServicePriceRange` are product-research responses. They do not prove useful outcomes, repeated use, willingness to pay, unit economics or commercial readiness.
 
 ## Optional respondent identity
 

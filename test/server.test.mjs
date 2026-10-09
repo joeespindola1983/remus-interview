@@ -27,17 +27,30 @@ test("health and response submission", async t => {
   const health = await fetch(`${baseUrl}/api/health`);
   assert.equal(health.status, 200);
 
+  const clubPage = await fetch(`${baseUrl}/club/`);
+  assert.equal(clubPage.status, 200);
+  assert.match(await clubPage.text(), /Pesquisa detalhada/);
+
+  const clubScript = await fetch(`${baseUrl}/club/club.js`);
+  assert.equal(clubScript.status, 200);
+  assert.match(await clubScript.text(), /club_detailed_questionnaire/);
+
   const submission = await fetch(`${baseUrl}/api/responses`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       questionnaireVersion: "2026-10-07.v3",
       consent: true,
-      answers: Object.fromEntries(Array.from({ length: 20 }, (_, index) => [`q${index}`, "answer"]))
+      answers: {
+        researchInstrument: "club_detailed_questionnaire",
+        instrumentRevision: "2026-10-09.v1",
+        ...Object.fromEntries(Array.from({ length: 18 }, (_, index) => [`q${index}`, "answer"]))
+      }
     })
   });
   assert.equal(submission.status, 201);
   const saved = JSON.parse((await readFile(responsesFile, "utf8")).trim());
   assert.equal(saved.consent, true);
   assert.equal(Object.keys(saved.answers).length, 20);
+  assert.equal(saved.answers.researchInstrument, "club_detailed_questionnaire");
 });
